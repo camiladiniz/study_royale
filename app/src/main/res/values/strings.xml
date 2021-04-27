@@ -8,5 +8,13 @@
     <string name="action_adicionar">Adicionar</string>
     <string name="action_config">Configurações</string>
 
+    <string name="action_atividades">Atividades</string>
+    <string name="action_cadastro_atividade">Adicionar atividade</string>
+
+    <string name="action_sair">Sair</string>
+
     <string name="create_message">Preencha com as informações da atividade</string>
+
+    <string name="navigation_drawer_open">Abrir</string>
+    <string name="navigation_drawer_close">Fechar</string>
 </resources>

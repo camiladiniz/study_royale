@@ -1,8 +1,8 @@
 package br.com.studyroyale
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.Menu
@@ -10,11 +10,20 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_tela_inicial.*
 import kotlinx.android.synthetic.main.toolbar.*
 
-class TelaInicialActivity : AppCompatActivity() {
+class TelaInicialActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    private val context: Context get() = this
+    private var atividades = listOf<Atividade>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,19 +32,100 @@ class TelaInicialActivity : AppCompatActivity() {
         // colocar toolbar
         setSupportActionBar(toolbar)
 
-        btn_item1.setOnClickListener{clickButton(btn_item1)}
+//        btn_item1.setOnClickListener{clickButton(btn_item1)}
+//
+//        btn_item2.setOnClickListener{clickButton(btn_item2)}
+//
+//        btn_item3.setOnClickListener{clickButton(btn_item3)}
 
-        btn_item2.setOnClickListener{clickButton(btn_item2)}
+        // configuração no menu lateral
+        configuraMenuLateral()
 
-        btn_item3.setOnClickListener{clickButton(btn_item3)}
+        // configurar cardview
+        recyclerAtividades?.layoutManager = LinearLayoutManager(context)
+        recyclerAtividades?.itemAnimator = DefaultItemAnimator()
+        recyclerAtividades?.setHasFixedSize(true)
 
     }
 
-    fun clickButton(button: Button) {
+    override fun onResume() {
+        super.onResume()
+        // task para recuperar as disciplinas
+        taskAtividades()
+    }
 
-        supportActionBar?.title = button.text.toString()
+    fun taskAtividades() {
+        this.atividades = AtividadeService.getAtividades(context)
+        // atualizar lista
+        recyclerAtividades?.adapter = DisciplinaAdapter(atividades) {onClickAtividade(it)}
+    }
+
+    fun onClickAtividade(atividade: Atividade) {
+
+        if(atividade.nota < 5) {
+            Toast.makeText(context, "Parece que você precisa estudar mais", Toast.LENGTH_SHORT)
+                .show()
+        }else if(atividade.nota == 10) {
+            Toast.makeText(context, "Parabéns! Continue assim", Toast.LENGTH_SHORT)
+                .show()
+        }else {
+            Toast.makeText(context, "Muito bem!", Toast.LENGTH_SHORT)
+                .show()
+        }
 
     }
+
+    // configuração do navigation Drawer com a toolbar
+    private fun configuraMenuLateral() {
+
+        // ícone de menu (hamburger) para mostrar o menu
+        var toogle = ActionBarDrawerToggle(
+            this,
+            layoutMenuLateral,
+            toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close)
+        layoutMenuLateral.addDrawerListener(toogle)
+        toogle.syncState()
+        menu_lateral.setNavigationItemSelectedListener(this)
+    }
+
+    // método que deve ser implementado quando a activity implementa
+    // a interface NavigationView.OnNavigationItemSelectedListener
+    // para tratar os eventos de clique no menu lateral
+        override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.nav_atividades -> {
+                val intent = Intent(this, TelaInicialActivity::class.java)
+                startActivity(intent)
+            }
+
+            R.id.nav_cadastrar_atividade -> {
+                val intent = Intent(this, NotaCadastroActivity::class.java)
+                startActivity(intent)
+            }
+
+            R.id.nav_sair -> {
+                Toast.makeText(this, "Até a próxima!", Toast.LENGTH_SHORT).show()
+
+                val intent = Intent(this, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
+
+        }
+
+        // fecha menu depois de tratar o evento
+        layoutMenuLateral.closeDrawer(GravityCompat.START)
+        return true
+        }
+
+        fun clickButton(button: Button) {
+
+            supportActionBar?.title = button.text.toString()
+
+        }
 
     // função sobrescrita para inflar o menu na ActionBar
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -75,13 +165,13 @@ class TelaInicialActivity : AppCompatActivity() {
                 Toast.LENGTH_LONG).show()
         } else if (id == R.id.action_atualizar) {
 
-            progressBar.visibility = View.VISIBLE
-            Handler().postDelayed(
-                {
-                    progressBar.visibility = View.INVISIBLE
-                },
-                10000
-            )
+//            progressBar.visibility = View.VISIBLE
+//            Handler().postDelayed(
+//                {
+//                    progressBar.visibility = View.INVISIBLE
+//                },
+//                10000
+//            )
 
         } else if (id == R.id.action_criar) {
 
