@@ -24,6 +24,8 @@ object AtividadeService {
 
             var items = dao.findAll()
 
+            var atualizar = false
+
             for(i in items) {
                 if(i.id < 0){
                     var novaAtividade = NovaAtividade()
@@ -32,8 +34,9 @@ object AtividadeService {
                     novaAtividade.foto = i.foto
                     novaAtividade.nome = i.nome
 
-                    Log.d("aaaaaaaaa", novaAtividade.id.toString())
                     save(novaAtividade)
+
+                    atualizar = true;
                 }
                 dao.delete(i)
             }
@@ -41,6 +44,9 @@ object AtividadeService {
             for (a in atividades) {
                 saveOffline(a)
             }
+
+            if(atualizar)
+                getAtividades(context)
 
             return atividades
 

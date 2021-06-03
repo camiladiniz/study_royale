@@ -52,4 +52,11 @@ dependencies {
     // Google Room - Banco de dados
     implementation "androidx.room:room-runtime:2.2.3"
     kapt "androidx.room:room-compiler:2.2.3"
+
+    // Firebase notification
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-messaging:17.3.2'
 }
+
+// Firebase
+apply plugin: 'com.google.gms.google-services'
