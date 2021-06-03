@@ -68,6 +68,20 @@
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorDark" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/checkLembrar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left|center_vertical"
+                android:text="Lembrar login"
+                android:textColor="@color/colorGrey" />
+        </LinearLayout>
+
         <Button
             android:id="@+id/botao_login"
             android:layout_width="match_parent"

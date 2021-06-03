@@ -14,6 +14,16 @@ class MainActivity : AppCompatActivity() {
 
         botao_login.setOnClickListener {onClickLogin() }
 
+        // procurar pelas preferências, se pediu para guardar usuário e senha
+        var lembrar = Prefs.getBoolean("lembrar")
+        if (lembrar) {
+            var lembrarNome  = Prefs.getString("lembrarNome")
+            var lembrarSenha  = Prefs.getString("lembrarSenha")
+            campo_usuario.setText(lembrarNome)
+            campo_senha.setText(lembrarSenha)
+            checkLembrar.isChecked = lembrar
+
+        }
     }
 
     fun onClickLogin(){
@@ -25,6 +35,17 @@ class MainActivity : AppCompatActivity() {
         if(false){
             Toast.makeText(this, "Usuário inválido!", Toast.LENGTH_LONG).show()
         }else {
+            // armazenar valor do checkbox
+            Prefs.setBoolean("lembrar", checkLembrar.isChecked)
+//          // verificar se é para lembrar nome e senha
+            if (checkLembrar.isChecked) {
+                Prefs.setString("lembrarNome", valorUsuario)
+                Prefs.setString("lembrarSenha", valorSenha)
+            } else{
+                Prefs.setString("lembrarNome", "")
+                Prefs.setString("lembrarSenha","")
+            }
+
             // criar intent
             val intent = Intent(this, TelaInicialActivity::class.java)
             // colocar parâmetros (opcional)

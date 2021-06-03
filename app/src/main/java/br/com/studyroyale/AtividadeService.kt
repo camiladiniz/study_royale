@@ -7,19 +7,30 @@ import com.google.gson.reflect.TypeToken
 
 object AtividadeService {
 
-    val host = "http://camiladiniz.pythonanywhere.com"
+    val host = "http://acmobile2021.pythonanywhere.com"
     val TAG = "WS_study_royale"
 
     fun getAtividades (context: Context): List<Atividade> {
 
+        var atividades = ArrayList<Atividade>()
         if (AndroidUtils.isInternetDisponivel(context)) {
             val url = "$host/atividades"
             val json = HttpHelper.get(url)
 
             //Log.d(TAG, json)
-           return parserJson(json)
+           atividades = parserJson(json)
+
+            for (a in atividades) {
+                saveOffline(a)
+            }
+
+            return atividades
+
         } else {
-           return ArrayList<Atividade>()
+           //return ArrayList<Atividade>()
+            val dao = DatabaseManager.getAtividadeDAO()
+            val atividades = dao.findAll()
+            return atividades
         }
 
 //        val disciplinas = mutableListOf<Atividade>()
@@ -74,8 +85,29 @@ object AtividadeService {
 //        return disciplinas
     }
 
+    fun save(atividade: NovaAtividade): Response {
+        val json = HttpHelper.post("$host/atividades/${atividade.id}", atividade.toJson())
+        return parserJson<Response>(json)
+    }
+
     inline fun <reified T> parserJson(json: String): T {
         val type = object : TypeToken<T>(){}.type
         return Gson().fromJson<T>(json, type)
+    }
+
+    fun saveOffline(atividade: Atividade) : Boolean {
+        val dao = DatabaseManager.getAtividadeDAO()
+
+        if (! existeAtividade(atividade)) {
+            dao.insert(atividade)
+        }
+
+        return true
+
+    }
+
+    fun existeAtividade(atividade: Atividade): Boolean {
+        val dao = DatabaseManager.getAtividadeDAO()
+        return dao.getById(atividade.id) != null
     }
 }

@@ -49,4 +49,6 @@ object HttpHelper {
         }
         throw IOException("Erro na requisição")
     }
+
+
 }
