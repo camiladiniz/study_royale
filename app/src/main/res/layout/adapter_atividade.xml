@@ -18,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/cardNome"
             android:layout_width="wrap_content"
@@ -25,25 +26,46 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:textSize="20sp" />
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/cardImg"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="6dp"/>
+        <!--        <FrameLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content">-->
+        <!--            <ImageView-->
+        <!--                android:id="@+id/cardImg"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="150dp"-->
+        <!--                android:layout_gravity="center_horizontal"-->
+        <!--                android:layout_marginTop="6dp"/>-->
 
-            <ProgressBar
-                android:id="@+id/cardProgress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@android:style/Widget.ProgressBar.Small"
-                android:layout_gravity="center|center_vertical"
-                android:layout_marginRight="6dp"
-                android:visibility="invisible"/>
+        <!--            <ProgressBar-->
+        <!--                android:id="@+id/cardProgress"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                style="@android:style/Widget.ProgressBar.Small"-->
+        <!--                android:layout_gravity="center|center_vertical"-->
+        <!--                android:layout_marginRight="6dp"-->
+        <!--                android:visibility="invisible"/>-->
 
-        </FrameLayout>
+        <!--        </FrameLayout>-->
+
+        <TextView
+            android:id="@+id/cardAlunosText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Alunos"
+            android:textSize="23sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerAlunos"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:cacheColorHint="@android:color/transparent"
+            android:clipToPadding="false"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:listSelector="@android:color/transparent"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbars="vertical"></androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

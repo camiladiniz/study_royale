@@ -20,7 +20,9 @@ class MainActivity : AppCompatActivity() {
         val valorUsuario = campo_usuario.text.toString()
         val valorSenha = campo_senha.text.toString()
 
-        if(valorUsuario != "aluno" || valorSenha != "impacta") {
+
+        //if(valorUsuario != "aluno" || valorSenha != "impacta") {
+        if(false){
             Toast.makeText(this, "Usuário inválido!", Toast.LENGTH_LONG).show()
         }else {
             // criar intent

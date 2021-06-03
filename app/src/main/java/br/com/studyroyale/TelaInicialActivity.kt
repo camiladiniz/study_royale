@@ -55,23 +55,31 @@ class TelaInicialActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     }
 
     fun taskAtividades() {
-        this.atividades = AtividadeService.getAtividades(context)
-        // atualizar lista
-        recyclerAtividades?.adapter = DisciplinaAdapter(atividades) {onClickAtividade(it)}
+        // Criar a Thread
+
+        Thread {
+            // Código para procurar as disciplinas
+            // que será executado em segundo plano / Thread separada
+            this.atividades = AtividadeService.getAtividades(context)
+            runOnUiThread {
+                // Código para atualizar a UI com a lista de disciplinas
+                recyclerAtividades?.adapter = DisciplinaAdapter(this.atividades) { onClickAtividade(it) }
+            }
+        }.start()
     }
 
     fun onClickAtividade(atividade: Atividade) {
 
-        if(atividade.nota < 5) {
-            Toast.makeText(context, "Parece que você precisa estudar mais", Toast.LENGTH_SHORT)
-                .show()
-        }else if(atividade.nota == 10) {
-            Toast.makeText(context, "Parabéns! Continue assim", Toast.LENGTH_SHORT)
-                .show()
-        }else {
-            Toast.makeText(context, "Muito bem!", Toast.LENGTH_SHORT)
-                .show()
-        }
+//        if(atividade.nota < 5) {
+//            Toast.makeText(context, "Parece que você precisa estudar mais", Toast.LENGTH_SHORT)
+//                .show()
+//        }else if(atividade.nota == 10) {
+//            Toast.makeText(context, "Parabéns! Continue assim", Toast.LENGTH_SHORT)
+//                .show()
+//        }else {
+//            Toast.makeText(context, "Muito bem!", Toast.LENGTH_SHORT)
+//                .show()
+//        }
 
     }
 

@@ -5,14 +5,13 @@ import java.io.Serializable
 class Atividade: Serializable {
 
     var id:Long = 0
-    var nome = ""
     var professor = ""
     var nota = 0
-    var materia = ""
-    var nomeAtividade = ""
-    var foto = ""
+    var disciplina = ""
+    var nome = ""
+    var alunos = mutableListOf<Aluno>()
 
     override fun toString(): String {
-        return "$materia - $nomeAtividade - Nota: $nota"
+        return "$disciplina - $nome \n Professor: $professor"
     }
 }
