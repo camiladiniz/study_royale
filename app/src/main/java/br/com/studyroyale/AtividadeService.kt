@@ -13,12 +13,30 @@ object AtividadeService {
     fun getAtividades (context: Context): List<Atividade> {
 
         var atividades = ArrayList<Atividade>()
-        if (AndroidUtils.isInternetDisponivel(context)) {
+        if (AndroidUtils.isInternetDisponivel()) {
             val url = "$host/atividades"
             val json = HttpHelper.get(url)
 
             //Log.d(TAG, json)
            atividades = parserJson(json)
+
+            val dao = DatabaseManager.getAtividadeDAO()
+
+            var items = dao.findAll()
+
+            for(i in items) {
+                if(i.id < 0){
+                    var novaAtividade = NovaAtividade()
+                    novaAtividade.nota = i.nota
+                    novaAtividade.id = (i.id) * (-1)
+                    novaAtividade.foto = i.foto
+                    novaAtividade.nome = i.nome
+
+                    Log.d("aaaaaaaaa", novaAtividade.id.toString())
+                    save(novaAtividade)
+                }
+                dao.delete(i)
+            }
 
             for (a in atividades) {
                 saveOffline(a)
@@ -30,7 +48,13 @@ object AtividadeService {
            //return ArrayList<Atividade>()
             val dao = DatabaseManager.getAtividadeDAO()
             val atividades = dao.findAll()
-            return atividades
+
+            val activities = mutableListOf<Atividade>()
+            for(a in atividades){
+                if(a.id > 0)
+                    activities.add(a)
+            }
+            return activities
         }
 
 //        val disciplinas = mutableListOf<Atividade>()
@@ -86,8 +110,26 @@ object AtividadeService {
     }
 
     fun save(atividade: NovaAtividade): Response {
-        val json = HttpHelper.post("$host/atividades/${atividade.id}", atividade.toJson())
-        return parserJson<Response>(json)
+
+
+        if(AndroidUtils.isInternetDisponivel()) {
+            val json = HttpHelper.post("$host/atividades/${atividade.id}", atividade.toJson())
+            return parserJson<Response>(json)
+        }else {
+            var atividadeBackup = Atividade()
+
+            val dao = DatabaseManager.getAtividadeDAO()
+            val atividades = dao.findAll()
+
+            atividadeBackup.id = atividade.id * -1
+            atividadeBackup.nota = atividade.nota
+            atividadeBackup.foto = atividade.foto
+            atividadeBackup.nome = atividade.nome
+
+            saveOffline(atividadeBackup)
+
+            return Response("false", "Aguardando conexão")
+        }
     }
 
     inline fun <reified T> parserJson(json: String): T {
@@ -98,9 +140,9 @@ object AtividadeService {
     fun saveOffline(atividade: Atividade) : Boolean {
         val dao = DatabaseManager.getAtividadeDAO()
 
-        if (! existeAtividade(atividade)) {
+        /*if (! existeAtividade(atividade)) {*/
             dao.insert(atividade)
-        }
+        /*}*/
 
         return true
 

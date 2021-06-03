@@ -14,6 +14,7 @@ class Atividade: Serializable {
     var nota = 0
     var disciplina = ""
     var nome = ""
+    var foto = "" // helper para aluno
     //@Embedded
     @TypeConverters(RoomConverter::class)
     //@Ignore
