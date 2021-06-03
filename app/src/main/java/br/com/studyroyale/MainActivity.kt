@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_tela_inicial.*
 import kotlinx.android.synthetic.main.login.*
 
 class MainActivity : AppCompatActivity() {
@@ -30,39 +31,56 @@ class MainActivity : AppCompatActivity() {
         val valorUsuario = campo_usuario.text.toString()
         val valorSenha = campo_senha.text.toString()
 
+        var validAuth = true
 
-        //if(valorUsuario != "aluno" || valorSenha != "impacta") {
-        if(false){
-            Toast.makeText(this, "Usuário inválido!", Toast.LENGTH_LONG).show()
-        }else {
-            // armazenar valor do checkbox
-            Prefs.setBoolean("lembrar", checkLembrar.isChecked)
-//          // verificar se é para lembrar nome e senha
-            if (checkLembrar.isChecked) {
-                Prefs.setString("lembrarNome", valorUsuario)
-                Prefs.setString("lembrarSenha", valorSenha)
-            } else{
-                Prefs.setString("lembrarNome", "")
-                Prefs.setString("lembrarSenha","")
+        Thread {
+            // Código para procurar as disciplinas
+            // que será executado em segundo plano / Thread separada
+            val response = AtividadeService.autenticar(valorUsuario, valorSenha)
+
+            //if(valorUsuario != "aluno" || valorSenha != "impacta") {
+            if(!response.isOK()){
+                validAuth = false
             }
 
-            // criar intent
-            val intent = Intent(this, TelaInicialActivity::class.java)
-            // colocar parâmetros (opcional)
-            /*val params = Bundle()
-            params.putString("nome", "Fernando Sousa")
-            intent.putExtras(params)*/
-
-            // enviar parâmetros simplificado
-            /*intent.putExtra("numero", 10)*/
-
-            // fazer a chamada
-            startActivity(intent)
-
-            // fazer a chamada esperando resultado
-            /*startActivityForResult(intent, 1)*/
-        }
-
+            runOnUiThread {
+                if(!validAuth){
+                    Toast.makeText(this, "Usuário inválido!", Toast.LENGTH_LONG).show()
+                }else {
+                    authenticateWithSuccess(valorUsuario, valorSenha)
+                }
+            }
+        }.start()
 
     }
+
+    fun authenticateWithSuccess(usuario: String, senha: String) {
+// armazenar valor do checkbox
+        Prefs.setBoolean("lembrar", checkLembrar.isChecked)
+//          // verificar se é para lembrar nome e senha
+        if (checkLembrar.isChecked) {
+            Prefs.setString("lembrarNome", usuario)
+            Prefs.setString("lembrarSenha", senha)
+        } else{
+            Prefs.setString("lembrarNome", "")
+            Prefs.setString("lembrarSenha","")
+        }
+
+        // criar intent
+        val intent = Intent(this, TelaInicialActivity::class.java)
+        // colocar parâmetros (opcional)
+        /*val params = Bundle()
+        params.putString("nome", "Fernando Sousa")
+        intent.putExtras(params)*/
+
+        // enviar parâmetros simplificado
+        /*intent.putExtra("numero", 10)*/
+
+        // fazer a chamada
+        startActivity(intent)
+
+        // fazer a chamada esperando resultado
+        /*startActivityForResult(intent, 1)*/
+    }
+
 }

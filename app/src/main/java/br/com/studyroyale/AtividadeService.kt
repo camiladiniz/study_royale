@@ -117,7 +117,6 @@ object AtividadeService {
 
     fun save(atividade: NovaAtividade): Response {
 
-
         if(AndroidUtils.isInternetDisponivel()) {
             val json = HttpHelper.post("$host/atividades/${atividade.id}", atividade.toJson())
             return parserJson<Response>(json)
@@ -136,6 +135,17 @@ object AtividadeService {
 
             return Response("false", "Aguardando conexão")
         }
+    }
+
+    fun autenticar(usuario: String, senha: String): Response {
+
+        var payload = LoginModel()
+        payload.ra = usuario
+        payload.senha = senha
+
+        val json = HttpHelper.post("$host/login", payload.toJson())
+        return parserJson<Response>(json)
+
     }
 
     inline fun <reified T> parserJson(json: String): T {
